@@ -12,9 +12,9 @@ That means your location is only being shared with your own server and who you s
 
 The app currently lacks some features the original Android app has, mainly
 
-- [] Password protected shares
-- [] Creating a group
-- [] Participating in a group
+- [ ] Password protected shares
+- [ ] Creating a group
+- [ ] Participating in a group
 
 Please do open PRs for this!
 
