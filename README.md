@@ -1,6 +1,6 @@
 # Hauk iOS client
 
-Based on [the original Hauk](https://github.com/bilde2910/Hauk) by Github user bilde2910o
+Based on [the original Hauk](https://github.com/bilde2910/Hauk) by Github user bilde2910
 
 ## What is this?
 
