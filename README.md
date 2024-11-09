@@ -22,3 +22,6 @@ Please do open PRs for this!
 I currently do not pay for an Apple Developer Program license since I am not a seasoned iOS developer (this is the first time I have written an iOS app).
 
 The only way to run it on your phone currently is to get Xcode and build the source code yourself.
+
+## Screenshots
+![](https://irc.0x5e.eu/uploads/cd36fb9163f97657/hauk-ios-preview.png)
