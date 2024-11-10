@@ -1,6 +1,7 @@
 import SwiftUI
 import BackgroundTasks
 import AppIntents
+import UserNotifications
 
 @main
 struct HaukApp: App {
@@ -16,6 +17,13 @@ struct HaukApp: App {
         
         // Use the shared SharingManager instance instead of creating a new one
         _sharingManager = StateObject(wrappedValue: SharingManager.shared)
+        
+        // Request notification permissions
+        Task {
+            try? await UNUserNotificationCenter.current().requestAuthorization(
+                options: [.alert, .sound]
+            )
+        }
         
         // Register for background task handling
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "net.bouwhuis.nick.Hauk.locationUpdate", using: nil) { task in

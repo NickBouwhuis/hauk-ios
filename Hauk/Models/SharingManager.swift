@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import UserNotifications
 
 @MainActor
 final class SharingManager: ObservableObject, @unchecked Sendable {
@@ -11,6 +12,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     @Published var isSharing = false
     @Published var activeShares: [Share] = []
     @Published var error: Error?
+    @Published var sessionEndMessage: String?
     
     private let locationManager: LocationManager?
     private var uploadTask: Task<Void, Never>?
@@ -219,6 +221,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         // Check for specific error responses
         if let responseStr = String(data: data, encoding: .utf8) {
+            if responseStr.contains("Session expired!") {
+                await handleSessionEnd(expired: true)
+                return
+            }
             if responseStr.contains("Missing data!") {
                 throw SharingError.serverError
             }
@@ -234,10 +240,28 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         do {
             try await uploadLocationToServer(location, for: share)
         } catch {
-            if !(error is CancellationError) {
-                await MainActor.run {
-                    self.error = error
-                }
+            if error is CancellationError {
+                return
+            }
+            
+            // Handle session expiry
+            if let data = (error as? URLError)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? Data,
+               let responseStr = String(data: data, encoding: .utf8),
+               responseStr.contains("Session expired!") {
+                await handleSessionEnd(expired: true)
+                return
+            }
+            
+            // Also check in uploadLocationToServer response
+            if let sharingError = error as? SharingError,
+               case .serverError = sharingError,
+               error.localizedDescription.contains("Session expired!") {
+                await handleSessionEnd(expired: true)
+                return
+            }
+            
+            await MainActor.run {
+                self.error = error
             }
         }
     }
@@ -272,6 +296,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         if let share = shareToStop {
             do {
                 try await stopShare(share)
+                await handleSessionEnd(expired: false)
             } catch {
                 print("Error stopping share: \(error.localizedDescription)")
             }
@@ -297,6 +322,47 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             case .cancelled:
                 return "Operation cancelled. This is normal during rapid updates."
             }
+        }
+    }
+    
+    private func handleSessionEnd(expired: Bool) async {
+        await stopSharing()
+        
+        // Show different messages for manual stop vs expiration
+        let message = expired ? "Location sharing session expired" : "Location sharing stopped"
+        
+        // If app is active, show in-app message
+        await MainActor.run {
+            sessionEndMessage = message
+            
+            // Automatically hide the message after 3 seconds
+            Task {
+                try? await Task.sleep(for: .seconds(3))
+                await MainActor.run {
+                    if sessionEndMessage == message {  // Only clear if it hasn't been changed
+                        sessionEndMessage = nil
+                    }
+                }
+            }
+        }
+        
+        // If app is in background, show system notification
+        let notificationCenter = UNUserNotificationCenter.current()
+        let settings = await notificationCenter.notificationSettings()
+        
+        if settings.authorizationStatus == .authorized {
+            let content = UNMutableNotificationContent()
+            content.title = "Hauk"
+            content.body = message
+            content.sound = UNNotificationSound.default
+            
+            let request = UNNotificationRequest(
+                identifier: UUID().uuidString,
+                content: content,
+                trigger: nil as UNNotificationTrigger?
+            )
+            
+            try? await notificationCenter.add(request)
         }
     }
 } 
