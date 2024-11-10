@@ -1,32 +1,32 @@
 import CoreLocation
-import Combine
+import Foundation
 
+@MainActor
 final class LocationManager: NSObject, ObservableObject {
-    private let locationManager = CLLocationManager()
-    private var locationUpdateHandler: ((CLLocation) -> Void)?
-    
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published var location: CLLocation?
-    @Published var authorizationStatus: CLAuthorizationStatus
     @Published var error: Error?
     
+    private var locationManager: CLLocationManager?
+    private var locationUpdateHandler: ((CLLocation) -> Void)?
+    
     override init() {
-        authorizationStatus = .notDetermined
         super.init()
+        setup()
+    }
+    
+    private func setup() {
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.pausesLocationUpdatesAutomatically = false
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.showsBackgroundLocationIndicator = true
-        locationManager.pausesLocationUpdatesAutomatically = false
-        locationManager.activityType = .otherNavigation
-        locationManager.distanceFilter = 10 // meters
-        
-        // Request authorization immediately on init
-        requestAuthorization()
+        authorizationStatus = locationManager?.authorizationStatus ?? .notDetermined
     }
     
     func requestAuthorization() {
-        locationManager.requestAlwaysAuthorization()
+        locationManager?.requestAlwaysAuthorization()
     }
     
     func startUpdating(handler: ((CLLocation) -> Void)? = nil) {
@@ -43,47 +43,41 @@ final class LocationManager: NSObject, ObservableObject {
             return
         }
         
-        // Start location updates on main thread
-        DispatchQueue.main.async { [weak self] in
-            self?.locationManager.startUpdatingLocation()
-        }
+        locationManager?.startUpdatingLocation()
     }
     
     func stopUpdating() {
-        // Stop updates on main thread
-        DispatchQueue.main.async { [weak self] in
-            self?.locationManager.stopUpdatingLocation()
-            self?.locationUpdateHandler = nil
-        }
+        locationManager?.stopUpdatingLocation()
+        locationUpdateHandler = nil
     }
 }
 
 extension LocationManager: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        DispatchQueue.main.async { [weak self] in
-            self?.authorizationStatus = manager.authorizationStatus
+    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        Task { @MainActor in
+            self.authorizationStatus = manager.authorizationStatus
             
             // If we got authorization and should be updating, start updates
             if (manager.authorizationStatus == .authorizedAlways ||
                 manager.authorizationStatus == .authorizedWhenInUse) &&
-                self?.locationUpdateHandler != nil {
-                self?.startUpdating()
+                self.locationUpdateHandler != nil {
+                self.startUpdating()
             }
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         
-        DispatchQueue.main.async { [weak self] in
-            self?.location = location
-            self?.locationUpdateHandler?(location)
+        Task { @MainActor in
+            self.location = location
+            self.locationUpdateHandler?(location)
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        DispatchQueue.main.async { [weak self] in
-            self?.error = error
+    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        Task { @MainActor in
+            self.error = error
             print("Location manager error: \(error.localizedDescription)")
         }
     }

@@ -1,7 +1,13 @@
 import Foundation
 import CoreLocation
 
-final class SharingManager: ObservableObject {
+@MainActor
+final class SharingManager: ObservableObject, @unchecked Sendable {
+    static let shared: SharingManager = {
+        let locationManager = LocationManager()
+        return SharingManager(locationManager: locationManager)
+    }()
+    
     @Published var isSharing = false
     @Published var activeShares: [Share] = []
     @Published var error: Error?

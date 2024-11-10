@@ -1,16 +1,21 @@
 import SwiftUI
 import BackgroundTasks
+import AppIntents
 
 @main
 struct HaukApp: App {
-    @StateObject private var locationManager = LocationManager()
+    @StateObject private var locationManager: LocationManager
     @StateObject private var sharingManager: SharingManager
     
+    static let shortcutsProvider = HaukShortcuts()
+    
     init() {
+        // Initialize LocationManager first
         let locationManager = LocationManager()
-        let sharingManager = SharingManager(locationManager: locationManager)
         _locationManager = StateObject(wrappedValue: locationManager)
-        _sharingManager = StateObject(wrappedValue: sharingManager)
+        
+        // Use the shared SharingManager instance instead of creating a new one
+        _sharingManager = StateObject(wrappedValue: SharingManager.shared)
         
         // Register for background task handling
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "net.bouwhuis.nick.Hauk.locationUpdate", using: nil) { task in
