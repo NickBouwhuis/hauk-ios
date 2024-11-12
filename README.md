@@ -19,6 +19,8 @@ The app currently lacks some features the original Android app has, mainly
 Please do open PRs for this!
 
 ## How do I get it?
+[Get it on the App Store](https://apps.apple.com/nl/app/hauk/id6738009304?l=en-GB)
+or
 [Join the TestFlight](https://testflight.apple.com/join/1VUJFz4Q)
 
 ## Screenshots
