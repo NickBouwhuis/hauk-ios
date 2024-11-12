@@ -122,8 +122,9 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         // Get settings
         let preferredLinkId = UserDefaults.standard.string(forKey: "preferredLinkId") ?? ""
-        let isPasswordProtected = UserDefaults.standard.bool(forKey: "isPasswordProtected")
-        let sharePassword = UserDefaults.standard.string(forKey: "sharePassword") ?? ""
+//        let isPasswordProtected = UserDefaults.standard.bool(forKey: "isPasswordProtected")
+//        let sharePassword = UserDefaults.standard.string(forKey: "sharePassword") ?? ""
+        let password = UserDefaults.standard.string(forKey: "password") ?? ""
         
         // Use default value of 1 if not set
         let interval = UserDefaults.standard.object(forKey: "updateInterval") as? Int ?? 1
@@ -133,7 +134,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             ("mod", "0"),
             ("lid", preferredLinkId),
             ("e2e", "0"),
-            ("pwd", isPasswordProtected ? sharePassword : ""),
+            ("pwd", password),
             ("ado", "0"),
             ("int", "\(interval)")
         ]
@@ -148,11 +149,11 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            throw SharingError.serverError
+            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
         }
         
         guard let responseStr = String(data: data, encoding: .utf8) else {
-            throw SharingError.serverError
+            throw SharingError.serverError("Could not decode server response")
         }
         
         let parts = responseStr.split(separator: "\n")
@@ -162,8 +163,9 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             if responseStr.contains("Missing data!") {
                 print("Server response: Missing data!")
                 print("Sent data: \(formData)")
+                throw SharingError.serverError("Server response: \(responseStr)")
             }
-            throw SharingError.serverError
+            throw SharingError.serverError("\(responseStr)")
         }
         
         let sessionId = String(parts[1])
@@ -216,20 +218,20 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            throw SharingError.serverError
+            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
         }
         
         // Check for specific error responses
         if let responseStr = String(data: data, encoding: .utf8) {
             if responseStr.contains("Session expired!") {
-                await handleSessionEnd(expired: true)
+                await stopSharing()
                 return
             }
             if responseStr.contains("Missing data!") {
-                throw SharingError.serverError
+                throw SharingError.serverError("Missing data in request")
             }
             if !responseStr.hasPrefix("OK") {
-                throw SharingError.serverError
+                throw SharingError.serverError("Unexpected response: \(responseStr)")
             }
         }
     }
@@ -241,22 +243,6 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             try await uploadLocationToServer(location, for: share)
         } catch {
             if error is CancellationError {
-                return
-            }
-            
-            // Handle session expiry
-            if let data = (error as? URLError)?.userInfo[NSURLErrorFailingURLStringErrorKey] as? Data,
-               let responseStr = String(data: data, encoding: .utf8),
-               responseStr.contains("Session expired!") {
-                await handleSessionEnd(expired: true)
-                return
-            }
-            
-            // Also check in uploadLocationToServer response
-            if let sharingError = error as? SharingError,
-               case .serverError = sharingError,
-               error.localizedDescription.contains("Session expired!") {
-                await handleSessionEnd(expired: true)
                 return
             }
             
@@ -276,11 +262,11 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         let formData = "sid=\(sessionId)"
         request.httpBody = formData.data(using: .utf8)
         
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            throw SharingError.serverError
+            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
         }
     }
     
@@ -308,7 +294,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     enum SharingError: LocalizedError {
         case noServerConfigured
         case invalidServerUrl
-        case serverError
+        case serverError(String)
         case cancelled
         
         var errorDescription: String? {
@@ -317,8 +303,8 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                 return "No server URL configured. Please set a server URL in Settings."
             case .invalidServerUrl:
                 return "The configured server URL is invalid."
-            case .serverError:
-                return "Failed to communicate with the server. Please try again."
+            case .serverError(let response):
+                return "Server error: \(response)"
             case .cancelled:
                 return "Operation cancelled. This is normal during rapid updates."
             }

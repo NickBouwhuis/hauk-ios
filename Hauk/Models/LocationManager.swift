@@ -26,7 +26,15 @@ final class LocationManager: NSObject, ObservableObject {
     }
     
     func requestAuthorization() {
+        // Always request "Always" authorization since we need background location updates
         locationManager?.requestAlwaysAuthorization()
+        
+        // Make sure background updates are enabled
+        locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.pausesLocationUpdatesAutomatically = false
+        
+        // Update the current status
+        authorizationStatus = locationManager?.authorizationStatus ?? .notDetermined
     }
     
     func startUpdating(handler: ((CLLocation) -> Void)? = nil) {

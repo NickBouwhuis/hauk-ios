@@ -2,12 +2,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("serverUrl") private var serverUrl = ""
-    @AppStorage("username") private var username = ""
+//    @AppStorage("username") private var username = ""
     @AppStorage("password") private var password = ""
     @AppStorage("preferredLinkId") private var preferredLinkId = ""
     @AppStorage("updateInterval") private var updateInterval = 1
-    @AppStorage("isPasswordProtected") private var isPasswordProtected = false
-    @AppStorage("sharePassword") private var sharePassword = ""
+//    @AppStorage("isPasswordProtected") private var isPasswordProtected = false
+//    @AppStorage("sharePassword") private var sharePassword = ""
     @EnvironmentObject var locationManager: LocationManager
     
     var body: some View {
@@ -18,10 +18,10 @@ struct SettingsView: View {
                     .disableAutocorrection(true)
                     .keyboardType(.URL)
                 
-                TextField("Username (optional)", text: $username)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                
+//                TextField("Username (optional)", text: $username)
+//                    .autocapitalization(.none)
+//                    .disableAutocorrection(true)
+//                
                 SecureField("Password (optional)", text: $password)
             }
             
@@ -35,11 +35,11 @@ struct SettingsView: View {
                         in: 1...60)
                     .help("Minimum interval is 1 second")
                 
-                Toggle("Password Protected Shares", isOn: $isPasswordProtected)
+//                Toggle("Password Protected Shares", isOn: $isPasswordProtected)
                 
-                if isPasswordProtected {
-                    SecureField("Share Password", text: $sharePassword)
-                }
+//                if isPasswordProtected {
+//                    SecureField("Share Password", text: $sharePassword)
+//                }
             }
             
             Section(header: Text("Location Access")) {

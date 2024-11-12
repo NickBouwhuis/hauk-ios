@@ -25,6 +25,9 @@ struct HaukApp: App {
             )
         }
         
+        // Request location permissions immediately
+        locationManager.requestAuthorization()
+        
         // Register for background task handling
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "net.bouwhuis.nick.Hauk.locationUpdate", using: nil) { task in
             task.setTaskCompleted(success: true)
