@@ -7,10 +7,19 @@ struct StartSharingIntent: AppIntent {
     
     static var openAppWhenRun = false
     
+    @Parameter(
+        title: "Duration",
+        description: "Duration in minutes to share location",
+        default: 60
+    )
+    var durationMinutes: Int
+
     static var parameterSummary: some ParameterSummary {
-        Summary("Start sharing location for 1 hour")
+        Summary("Start sharing location for \(\.$durationMinutes) minutes") {
+            \.$durationMinutes
+        }
     }
-    
+
     @MainActor
     static var resultDisplayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
@@ -29,8 +38,8 @@ struct StartSharingIntent: AppIntent {
             return .result(value: existingShare.shareUrl)
         }
         
-        // Default sharing duration (1 hour = 3600 seconds)
-        let duration: TimeInterval = 3600
+        // Convert minutes to seconds
+        let duration: TimeInterval = TimeInterval(max(1, durationMinutes)) * 60
         
         await manager.startSharing(duration: duration)
         
@@ -62,4 +71,4 @@ struct StartSharingIntent: AppIntent {
             }
         }
     }
-} 
+}

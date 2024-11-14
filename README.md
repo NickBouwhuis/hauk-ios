@@ -15,7 +15,7 @@ The app currently lacks some features the original Android app has, mainly
 - [ ] Password protected shares
 - [ ] Creating a group
 - [ ] Participating in a group
-- [ ] Set sharing duration from Shortcut action (currently hardcoded to 1h)
+- [x] Set sharing duration from Shortcut action 
 
 Please do open PRs for this!
 

@@ -125,13 +125,11 @@ struct MainView: View {
     enum TimeUnit: String, CaseIterable {
         case minutes = "Minutes"
         case hours = "Hours"
-        case days = "Days"
         
         var multiplier: TimeInterval {
             switch self {
             case .minutes: return 60
             case .hours: return 3600
-            case .days: return 86400
             }
         }
     }
