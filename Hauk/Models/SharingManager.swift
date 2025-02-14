@@ -124,6 +124,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         let preferredLinkId = UserDefaults.standard.string(forKey: "preferredLinkId") ?? ""
 //        let isPasswordProtected = UserDefaults.standard.bool(forKey: "isPasswordProtected")
 //        let sharePassword = UserDefaults.standard.string(forKey: "sharePassword") ?? ""
+        let username = UserDefaults.standard.string(forKey: "username") ?? ""
         let password = UserDefaults.standard.string(forKey: "password") ?? ""
         
         // Use default value of 1 if not set
@@ -134,6 +135,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             ("mod", "0"),
             ("lid", preferredLinkId),
             ("e2e", "0"),
+            ("usr", username),
             ("pwd", password),
             ("ado", "0"),
             ("int", "\(interval)")

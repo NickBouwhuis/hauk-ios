@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("serverUrl") private var serverUrl = ""
-//    @AppStorage("username") private var username = ""
+    @AppStorage("username") private var username = ""
     @AppStorage("password") private var password = ""
     @AppStorage("preferredLinkId") private var preferredLinkId = ""
     @AppStorage("updateInterval") private var updateInterval = 1
@@ -18,10 +18,10 @@ struct SettingsView: View {
                     .disableAutocorrection(true)
                     .keyboardType(.URL)
                 
-//                TextField("Username (optional)", text: $username)
-//                    .autocapitalization(.none)
-//                    .disableAutocorrection(true)
-//                
+                TextField("Username (optional)", text: $username)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+
                 SecureField("Password (optional)", text: $password)
             }
             
