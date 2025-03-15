@@ -122,6 +122,8 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         // Get settings
         let preferredLinkId = UserDefaults.standard.string(forKey: "preferredLinkId") ?? ""
+        // Boolean, but the API wants it as an int.  Default to the more private false
+        let isAdoptable = UserDefaults.standard.object(forKey: "isAdoptable") as? Int ?? 0
 //        let isPasswordProtected = UserDefaults.standard.bool(forKey: "isPasswordProtected")
 //        let sharePassword = UserDefaults.standard.string(forKey: "sharePassword") ?? ""
         let username = UserDefaults.standard.string(forKey: "username") ?? ""
@@ -137,7 +139,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             ("e2e", "0"),
             ("usr", username),
             ("pwd", password),
-            ("ado", "0"),
+            ("ado", "\(isAdoptable)"),
             ("int", "\(interval)")
         ]
         

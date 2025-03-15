@@ -6,6 +6,7 @@ struct SettingsView: View {
     @AppStorage("password") private var password = ""
     @AppStorage("preferredLinkId") private var preferredLinkId = ""
     @AppStorage("updateInterval") private var updateInterval = 1
+    @AppStorage("isAdoptable") private var isAdoptable = true
 //    @AppStorage("isPasswordProtected") private var isPasswordProtected = false
 //    @AppStorage("sharePassword") private var sharePassword = ""
     @EnvironmentObject var locationManager: LocationManager
@@ -35,6 +36,8 @@ struct SettingsView: View {
                         in: 1...60)
                     .help("Minimum interval is 1 second")
                 
+                Toggle("Allow link adoption?", isOn: $isAdoptable)
+
 //                Toggle("Password Protected Shares", isOn: $isPasswordProtected)
                 
 //                if isPasswordProtected {

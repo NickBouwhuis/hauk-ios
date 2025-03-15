@@ -14,7 +14,8 @@ The app currently lacks some features the original Android app has, mainly
 
 - [ ] Password protected shares
 - [ ] Creating a group
-- [ ] Participating in a group
+- [ ] Joining a group
+- [x] Participating in a group via link adoption
 - [x] Set sharing duration from Shortcut action 
 
 Please do open PRs for this!
