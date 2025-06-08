@@ -316,7 +316,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     }
     
     private func handleSessionEnd(expired: Bool) async {
-        await stopSharing()
+        // `stopSharing()` already calls this method once the session has been
+        // terminated. Calling it again here resulted in infinite recursion,
+        // causing a crash when a share ended. Simply perform the UI and
+        // notification cleanup here without stopping again.
         
         // Show different messages for manual stop vs expiration
         let message = expired ? "Location sharing session expired" : "Location sharing stopped"
