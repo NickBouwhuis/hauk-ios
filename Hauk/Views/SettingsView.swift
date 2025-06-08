@@ -77,7 +77,7 @@ struct SettingsView: View {
     private var locationStatusText: String {
         switch locationManager.authorizationStatus {
         case .authorizedAlways: return "Always"
-        case .authorizedWhenInUse: return "While Using (for a better experience: Change to 'Always' in System Settings"
+        case .authorizedWhenInUse: return "While Using (for a better experience: change to 'Always' in System Settings)"
         case .denied: return "Denied. Hauk cannot share your location."
         case .restricted: return "Restricted. Hauk cannot share your location"
         case .notDetermined: return "Not Determined"
