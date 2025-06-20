@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import UserNotifications
+import ActivityKit
 
 @MainActor
 final class SharingManager: ObservableObject, @unchecked Sendable {
@@ -17,6 +18,8 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     private let locationManager: LocationManager?
     private var uploadTask: Task<Void, Never>?
     private var sessionId: String?
+    @available(iOS 16.1, *)
+    private var activity: Activity<LocationSharingAttributes>?
     private let queue = DispatchQueue(label: "net.bouwhuis.nick.Hauk.sharing")
     
     init(locationManager: LocationManager? = nil) {
@@ -42,12 +45,12 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             self.locations = []
         }
         
-        init(id: String, 
-             baseUrl: URL, 
-             shareUrl: URL, 
-             sessionId: String?, 
-             viewerId: String?, 
-             expiryDate: Date, 
+        init(id: String,
+             baseUrl: URL,
+             shareUrl: URL,
+             sessionId: String?,
+             viewerId: String?,
+             expiryDate: Date,
              locations: [CLLocation]) {
             self.id = id
             self.baseUrl = baseUrl
@@ -56,6 +59,45 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             self.viewerId = viewerId
             self.expiryDate = expiryDate
             self.locations = locations
+        }
+    }
+
+    // MARK: - Live Activity Handling
+
+    @available(iOS 16.1, *)
+    private func startLiveActivity(for share: Share) async {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+
+        let attributes = LocationSharingAttributes(
+            shareUrl: share.shareUrl.absoluteString,
+            startDate: Date()
+        )
+
+        let content = LocationSharingAttributes.ContentState(
+            expiryDate: share.expiryDate,
+            lastLocation: nil
+        )
+
+        activity = try? Activity.request(attributes: attributes, contentState: content)
+    }
+
+    @available(iOS 16.1, *)
+    private func updateLiveActivity(with location: CLLocation, expiryDate: Date) async {
+        guard let activity = activity else { return }
+
+        let state = LocationSharingAttributes.ContentState(
+            expiryDate: expiryDate,
+            lastLocation: String(format: "%.5f, %.5f", location.coordinate.latitude, location.coordinate.longitude)
+        )
+
+        await activity.update(using: state)
+    }
+
+    @available(iOS 16.1, *)
+    private func endLiveActivity() async {
+        if let activity = activity {
+            await activity.end(dismissalPolicy: .immediate)
+            self.activity = nil
         }
     }
     
@@ -93,7 +135,13 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         do {
             try await initializeShare(share)
-            
+
+            if #available(iOS 16.1, *) {
+                if let activeShare = await MainActor.run(body: { activeShares.first }) {
+                    await startLiveActivity(for: activeShare)
+                }
+            }
+
             await MainActor.run {
                 isSharing = true
                 // Start location updates after successful initialization
@@ -245,6 +293,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         do {
             try await uploadLocationToServer(location, for: share)
+
+            if #available(iOS 16.1, *) {
+                await updateLiveActivity(with: location, expiryDate: share.expiryDate)
+            }
         } catch {
             if error is CancellationError {
                 return
@@ -276,7 +328,11 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     
     func stopSharing() async {
         let shareToStop = await MainActor.run { activeShares.first }
-        
+
+        if #available(iOS 16.1, *) {
+            await endLiveActivity()
+        }
+
         await MainActor.run {
             locationManager?.stopUpdating()
             isSharing = false
@@ -320,6 +376,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         // terminated. Calling it again here resulted in infinite recursion,
         // causing a crash when a share ended. Simply perform the UI and
         // notification cleanup here without stopping again.
+
+        if #available(iOS 16.1, *) {
+            await endLiveActivity()
+        }
         
         // Show different messages for manual stop vs expiration
         let message = expired ? "Location sharing session expired" : "Location sharing stopped"

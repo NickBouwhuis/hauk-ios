@@ -33,11 +33,13 @@
 		<key>UISceneConfigurations</key>
 		<dict/>
 	</dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-	</array>
-	<key>UILaunchScreen</key>
+        <key>UIBackgroundModes</key>
+        <array>
+                <string>location</string>
+        </array>
+        <key>NSSupportsLiveActivities</key>
+        <true/>
+        <key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
