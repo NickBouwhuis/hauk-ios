@@ -24,10 +24,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-                016F2B492CDE9FC5004205E7 /* Hauk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hauk.app; sourceTree = BUILT_PRODUCTS_DIR; };
-                016F2B592CDE9FC7004205E7 /* HaukTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-                016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-                6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = HaukWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		016F2B492CDE9FC5004205E7 /* Hauk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hauk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		016F2B592CDE9FC7004205E7 /* HaukTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HaukWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -49,21 +49,21 @@
 			path = Hauk;
 			sourceTree = "<group>";
 		};
-                016F2B5C2CDE9FC7004205E7 /* HaukTests */ = {
-                        isa = PBXFileSystemSynchronizedRootGroup;
-                        path = HaukTests;
-                        sourceTree = "<group>";
-                };
-                016F2B662CDE9FC7004205E7 /* HaukUITests */ = {
-                        isa = PBXFileSystemSynchronizedRootGroup;
-                        path = HaukUITests;
-                        sourceTree = "<group>";
-                };
-                ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */ = {
-                        isa = PBXFileSystemSynchronizedRootGroup;
-                        path = HaukWidgetsExtension;
-                        sourceTree = "<group>";
-                };
+		016F2B5C2CDE9FC7004205E7 /* HaukTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HaukTests;
+			sourceTree = "<group>";
+		};
+		016F2B662CDE9FC7004205E7 /* HaukUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HaukUITests;
+			sourceTree = "<group>";
+		};
+		ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HaukWidgetsExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,45 +81,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-                016F2B602CDE9FC7004205E7 /* Frameworks */ = {
-                        isa = PBXFrameworksBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
-                26A142144129DE6E2F0C210B /* Frameworks */ = {
-                        isa = PBXFrameworksBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
+		016F2B602CDE9FC7004205E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		26A142144129DE6E2F0C210B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-                016F2B402CDE9FC4004205E7 = {
-                        isa = PBXGroup;
-                        children = (
-                                016F2B4B2CDE9FC5004205E7 /* Hauk */,
-                                016F2B5C2CDE9FC7004205E7 /* HaukTests */,
-                                016F2B662CDE9FC7004205E7 /* HaukUITests */,
-                                ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */,
-                                016F2B4A2CDE9FC5004205E7 /* Products */,
-                        );
-                        sourceTree = "<group>";
-                };
-                016F2B4A2CDE9FC5004205E7 /* Products */ = {
-                        isa = PBXGroup;
-                        children = (
-                                016F2B492CDE9FC5004205E7 /* Hauk.app */,
-                                016F2B592CDE9FC7004205E7 /* HaukTests.xctest */,
-                                016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */,
-                                6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */,
-                        );
-                        name = Products;
-                        sourceTree = "<group>";
-                };
+		016F2B402CDE9FC4004205E7 = {
+			isa = PBXGroup;
+			children = (
+				016F2B4B2CDE9FC5004205E7 /* Hauk */,
+				016F2B5C2CDE9FC7004205E7 /* HaukTests */,
+				016F2B662CDE9FC7004205E7 /* HaukUITests */,
+				ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */,
+				016F2B4A2CDE9FC5004205E7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		016F2B4A2CDE9FC5004205E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				016F2B492CDE9FC5004205E7 /* Hauk.app */,
+				016F2B592CDE9FC7004205E7 /* HaukTests.xctest */,
+				016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */,
+				6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -168,51 +168,51 @@
 			productReference = 016F2B592CDE9FC7004205E7 /* HaukTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-                016F2B622CDE9FC7004205E7 /* HaukUITests */ = {
-                        isa = PBXNativeTarget;
-                        buildConfigurationList = 016F2B732CDE9FC7004205E7 /* Build configuration list for PBXNativeTarget "HaukUITests" */;
-                        buildPhases = (
-                                016F2B5F2CDE9FC7004205E7 /* Sources */,
-                                016F2B602CDE9FC7004205E7 /* Frameworks */,
-                                016F2B612CDE9FC7004205E7 /* Resources */,
-                        );
-                        buildRules = (
-                        );
-                        dependencies = (
-                                016F2B652CDE9FC7004205E7 /* PBXTargetDependency */,
-                        );
-                        fileSystemSynchronizedGroups = (
-                                016F2B662CDE9FC7004205E7 /* HaukUITests */,
-                        );
-                        name = HaukUITests;
-                        packageProductDependencies = (
-                        );
-                        productName = HaukUITests;
-                        productReference = 016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */;
-                        productType = "com.apple.product-type.bundle.ui-testing";
-                };
-                E623186C8AFAE67C81CFCB46 /* HaukWidgetsExtension */ = {
-                        isa = PBXNativeTarget;
-                        buildConfigurationList = 00AAAB4CAF194EB18C1447DC /* Build configuration list for PBXNativeTarget "HaukWidgetsExtension" */;
-                        buildPhases = (
-                                19D2D1D649BDC2CF6CCAE2D1 /* Sources */,
-                                26A142144129DE6E2F0C210B /* Frameworks */,
-                                4C50ADF8F217776AA0E7AE51 /* Resources */,
-                        );
-                        buildRules = (
-                        );
-                        dependencies = (
-                        );
-                        fileSystemSynchronizedGroups = (
-                                ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */,
-                        );
-                        name = HaukWidgetsExtension;
-                        packageProductDependencies = (
-                        );
-                        productName = HaukWidgetsExtension;
-                        productReference = 6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */;
-                        productType = "com.apple.product-type.app-extension";
-                };
+		016F2B622CDE9FC7004205E7 /* HaukUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 016F2B732CDE9FC7004205E7 /* Build configuration list for PBXNativeTarget "HaukUITests" */;
+			buildPhases = (
+				016F2B5F2CDE9FC7004205E7 /* Sources */,
+				016F2B602CDE9FC7004205E7 /* Frameworks */,
+				016F2B612CDE9FC7004205E7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				016F2B652CDE9FC7004205E7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				016F2B662CDE9FC7004205E7 /* HaukUITests */,
+			);
+			name = HaukUITests;
+			packageProductDependencies = (
+			);
+			productName = HaukUITests;
+			productReference = 016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		E623186C8AFAE67C81CFCB46 /* HaukWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00AAAB4CAF194EB18C1447DC /* Build configuration list for PBXNativeTarget "HaukWidgetsExtension" */;
+			buildPhases = (
+				19D2D1D649BDC2CF6CCAE2D1 /* Sources */,
+				26A142144129DE6E2F0C210B /* Frameworks */,
+				4C50ADF8F217776AA0E7AE51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABF6B94442E9F59CFB09F64D /* HaukWidgetsExtension */,
+			);
+			name = HaukWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = HaukWidgetsExtension;
+			productReference = 6ECBAC2EA1CD88481B168FE0 /* HaukWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -222,22 +222,22 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
-                               TargetAttributes = {
-                                        016F2B482CDE9FC5004205E7 = {
-                                                CreatedOnToolsVersion = 16.1;
-                                        };
-                                        016F2B582CDE9FC7004205E7 = {
-                                                CreatedOnToolsVersion = 16.1;
-                                                TestTargetID = 016F2B482CDE9FC5004205E7;
-                                        };
-                                        016F2B622CDE9FC7004205E7 = {
-                                                CreatedOnToolsVersion = 16.1;
-                                                TestTargetID = 016F2B482CDE9FC5004205E7;
-                                        };
-                                        E623186C8AFAE67C81CFCB46 = {
-                                                CreatedOnToolsVersion = 16.1;
-                                        };
-                               };
+				TargetAttributes = {
+					016F2B482CDE9FC5004205E7 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					016F2B582CDE9FC7004205E7 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 016F2B482CDE9FC5004205E7;
+					};
+					016F2B622CDE9FC7004205E7 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 016F2B482CDE9FC5004205E7;
+					};
+					E623186C8AFAE67C81CFCB46 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+				};
 			};
 			buildConfigurationList = 016F2B442CDE9FC5004205E7 /* Build configuration list for PBXProject "Hauk" */;
 			developmentRegion = en;
@@ -252,13 +252,13 @@
 			productRefGroup = 016F2B4A2CDE9FC5004205E7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-                        targets = (
-                                016F2B482CDE9FC5004205E7 /* Hauk */,
-                                016F2B582CDE9FC7004205E7 /* HaukTests */,
-                                016F2B622CDE9FC7004205E7 /* HaukUITests */,
-                                E623186C8AFAE67C81CFCB46 /* HaukWidgetsExtension */,
-                        );
-                };
+			targets = (
+				016F2B482CDE9FC5004205E7 /* Hauk */,
+				016F2B582CDE9FC7004205E7 /* HaukTests */,
+				016F2B622CDE9FC7004205E7 /* HaukUITests */,
+				E623186C8AFAE67C81CFCB46 /* HaukWidgetsExtension */,
+			);
+		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -276,20 +276,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-                016F2B612CDE9FC7004205E7 /* Resources */ = {
-                        isa = PBXResourcesBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
-                4C50ADF8F217776AA0E7AE51 /* Resources */ = {
-                        isa = PBXResourcesBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
+		016F2B612CDE9FC7004205E7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C50ADF8F217776AA0E7AE51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -307,20 +307,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-                016F2B5F2CDE9FC7004205E7 /* Sources */ = {
-                        isa = PBXSourcesBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
-                19D2D1D649BDC2CF6CCAE2D1 /* Sources */ = {
-                        isa = PBXSourcesBuildPhase;
-                        buildActionMask = 2147483647;
-                        files = (
-                        );
-                        runOnlyForDeploymentPostprocessing = 0;
-                };
+		016F2B5F2CDE9FC7004205E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19D2D1D649BDC2CF6CCAE2D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -579,60 +579,69 @@
 			};
 			name = Debug;
 		};
-                016F2B752CDE9FC7004205E7 /* Release */ = {
-                        isa = XCBuildConfiguration;
-                        buildSettings = {
-                                CODE_SIGN_STYLE = Automatic;
-                                CURRENT_PROJECT_VERSION = 1;
-                                DEVELOPMENT_TEAM = 8SF744P2Y5;
-                                GENERATE_INFOPLIST_FILE = YES;
-                                MARKETING_VERSION = 1.0;
-                                PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.HaukUITests;
-                                PRODUCT_NAME = "$(TARGET_NAME)";
-                                SWIFT_EMIT_LOC_STRINGS = NO;
-                                SWIFT_VERSION = 5.0;
-                                TARGETED_DEVICE_FAMILY = "1,2";
-                                TEST_TARGET_NAME = Hauk;
-                        };
-                        name = Release;
-                };
-                CCF2BFDAD457FDC5536F4B9A /* Debug */ = {
-                        isa = XCBuildConfiguration;
-                        buildSettings = {
-                                CODE_SIGN_STYLE = Automatic;
-                                DEVELOPMENT_TEAM = 8SF744P2Y5;
-                                GENERATE_INFOPLIST_FILE = NO;
-                                INFOPLIST_FILE = HaukWidgetsExtension/Info.plist;
-                                IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-                                PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.widgets;
-                                PRODUCT_NAME = "$(TARGET_NAME)";
-                                SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-                                SUPPORTS_MACCATALYST = NO;
-                                SWIFT_VERSION = 5.0;
-                                TARGETED_DEVICE_FAMILY = 1;
-                        };
-                        name = Debug;
-                };
-                9DFEBB3925132C4534256269 /* Release */ = {
-                        isa = XCBuildConfiguration;
-                        buildSettings = {
-                                CODE_SIGN_STYLE = Automatic;
-                                DEVELOPMENT_TEAM = 8SF744P2Y5;
-                                GENERATE_INFOPLIST_FILE = NO;
-                                INFOPLIST_FILE = HaukWidgetsExtension/Info.plist;
-                                IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-                                PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.widgets;
-                                PRODUCT_NAME = "$(TARGET_NAME)";
-                                SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-                                SUPPORTS_MACCATALYST = NO;
-                                SWIFT_VERSION = 5.0;
-                                TARGETED_DEVICE_FAMILY = 1;
-                        };
-                        name = Release;
-                };
+		016F2B752CDE9FC7004205E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8SF744P2Y5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.HaukUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Hauk;
+			};
+			name = Release;
+		};
+		9DFEBB3925132C4534256269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SF744P2Y5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HaukWidgetsExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		CCF2BFDAD457FDC5536F4B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SF744P2Y5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HaukWidgetsExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00AAAB4CAF194EB18C1447DC /* Build configuration list for PBXNativeTarget "HaukWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCF2BFDAD457FDC5536F4B9A /* Debug */,
+				9DFEBB3925132C4534256269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		016F2B442CDE9FC5004205E7 /* Build configuration list for PBXProject "Hauk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -660,24 +669,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-                016F2B732CDE9FC7004205E7 /* Build configuration list for PBXNativeTarget "HaukUITests" */ = {
-                        isa = XCConfigurationList;
-                        buildConfigurations = (
-                                016F2B742CDE9FC7004205E7 /* Debug */,
-                                016F2B752CDE9FC7004205E7 /* Release */,
-                        );
-                        defaultConfigurationIsVisible = 0;
-                        defaultConfigurationName = Release;
-                };
-                00AAAB4CAF194EB18C1447DC /* Build configuration list for PBXNativeTarget "HaukWidgetsExtension" */ = {
-                        isa = XCConfigurationList;
-                        buildConfigurations = (
-                                CCF2BFDAD457FDC5536F4B9A /* Debug */,
-                                9DFEBB3925132C4534256269 /* Release */,
-                        );
-                        defaultConfigurationIsVisible = 0;
-                        defaultConfigurationName = Release;
-                };
+		016F2B732CDE9FC7004205E7 /* Build configuration list for PBXNativeTarget "HaukUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				016F2B742CDE9FC7004205E7 /* Debug */,
+				016F2B752CDE9FC7004205E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 	};
 	rootObject = 016F2B412CDE9FC5004205E7 /* Project object */;
