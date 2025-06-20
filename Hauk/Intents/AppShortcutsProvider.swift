@@ -5,14 +5,14 @@ public struct HaukShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: StartSharingIntent(),
             phrases: [
-                "Start sharing my location with Hauk",
-                "Share my location using Hauk",
-                "Start Hauk sharing",
-                "Get Hauk sharing link",
-                "Share my location for 1 hour"
+                "Start sharing my location with ${applicationName}",
+                "Share my location using ${applicationName}",
+                "Start ${applicationName} sharing",
+                "Get ${applicationName} sharing link",
+                "Share my location for 1 hour with ${applicationName}"
             ],
             shortTitle: "Share Location",
             systemImageName: "location.fill.viewfinder"
         )
     }
-} 
+}
