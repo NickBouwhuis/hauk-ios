@@ -13,8 +13,8 @@ That means your location is only being shared with your own server and who you s
 The app currently lacks some features the original Android app has, mainly
 
 - [ ] Password protected shares
-- [ ] Creating a group
-- [ ] Joining a group
+- [X] Creating a group
+- [X] Joining a group
 - [x] Participating in a group via link adoption
 - [x] Set sharing duration from Shortcut action 
 
