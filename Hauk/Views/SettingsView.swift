@@ -7,17 +7,39 @@ struct SettingsView: View {
     @AppStorage("preferredLinkId") private var preferredLinkId = ""
     @AppStorage("updateInterval") private var updateInterval = 1
     @AppStorage("isAdoptable") private var isAdoptable = true
+    @AppStorage("hasSeenDefaultServerWarning") private var hasSeenDefaultServerWarning = false
 //    @AppStorage("isPasswordProtected") private var isPasswordProtected = false
 //    @AppStorage("sharePassword") private var sharePassword = ""
     @EnvironmentObject var locationManager: LocationManager
     
+    private let defaultServerUrl = "https://hauk.live"
+    
+    private var effectiveServerUrl: String {
+        if serverUrl.isEmpty {
+            return defaultServerUrl
+        }
+        return serverUrl
+    }
+    
     var body: some View {
         Form {
             Section(header: Text("Server Configuration")) {
-                TextField("Server URL", text: $serverUrl)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .keyboardType(.URL)
+                VStack(alignment: .leading, spacing: 8) {
+                    TextField("Server URL", text: $serverUrl)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .keyboardType(.URL)
+                    
+                    if serverUrl.isEmpty {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.blue)
+                            Text("Using default server: \(defaultServerUrl)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
                 
                 TextField("Username (optional)", text: $username)
                     .autocapitalization(.none)

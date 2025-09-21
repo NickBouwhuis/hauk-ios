@@ -115,12 +115,19 @@ struct MainView: View {
     @State private var showingError = false
     @State private var sharingTask: Task<Void, Never>?
     @AppStorage("hideLogo") private var hideLogo = false
+    @AppStorage("hasSeenDefaultServerWarning") private var hasSeenDefaultServerWarning = false
     @State private var showingCopiedAlert = false
     @State private var showingShareDialog = false
+    @State private var showingDefaultServerWarning = false
     
     // Duration selection state
     @State private var duration: Double = 1
     @State private var unit: TimeUnit = .hours
+    
+    // Share mode selection state
+    @State private var selectedShareMode: ShareMode = .createAlone
+    @State private var nickname: String = ""
+    @State private var groupPin: String = ""
     
     enum TimeUnit: String, CaseIterable {
         case minutes = "Minutes"
@@ -136,6 +143,46 @@ struct MainView: View {
     
     // Add this state for navigation
     @State private var showingSettings = false
+    
+    private var canStartSharing: Bool {
+        if sharingManager.isSharing {
+            return true // Can always stop sharing
+        }
+        
+        // For group shares, nickname is required
+        if selectedShareMode.isGroupType && nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return false
+        }
+        
+        // For joining a group, group PIN is required
+        if selectedShareMode == .joinGroup && groupPin.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return false
+        }
+        
+        return true
+    }
+    
+    private var isUsingDefaultServer: Bool {
+        let serverUrl = UserDefaults.standard.string(forKey: "serverUrl") ?? ""
+        return serverUrl.isEmpty
+    }
+    
+    private func startSharing() {
+        sharingTask?.cancel()
+        sharingTask = Task {
+            await sharingManager.startSharing(
+                duration: duration * unit.multiplier,
+                shareMode: selectedShareMode,
+                nickname: nickname.isEmpty ? nil : nickname,
+                groupPin: groupPin.isEmpty ? nil : groupPin
+            )
+            await MainActor.run {
+                if !sharingManager.activeShares.isEmpty {
+                    showingShareDialog = true
+                }
+            }
+        }
+    }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -179,6 +226,14 @@ struct MainView: View {
                     }
                     
                     if !sharingManager.isSharing {
+                        // Share Mode Selection
+                        ShareModeSelectionView(
+                            selectedMode: $selectedShareMode,
+                            nickname: $nickname,
+                            groupPin: $groupPin
+                        )
+                        .padding(.horizontal)
+                        
                         // Duration Selection when not sharing
                         VStack(alignment: .center, spacing: 16) {
                             Text("Share Duration")
@@ -248,6 +303,48 @@ struct MainView: View {
                                     
                                     Divider()
                                     
+                                    // Group PIN Section (for group hosts)
+                                    if share.shareMode == .createGroup, let groupPin = share.groupPin {
+                                        VStack(spacing: 12) {
+                                            Text("GROUP PIN")
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.secondary)
+                                            
+                                            Text(groupPin)
+                                                .font(.system(.largeTitle, design: .monospaced))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .background(Color.blue.opacity(0.1))
+                                                .cornerRadius(12)
+                                            
+                                            Text("Share this PIN with others to let them join your group")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                                .multilineTextAlignment(.center)
+                                            
+                                            Button(action: {
+                                                UIPasteboard.general.string = groupPin
+                                                showingCopiedAlert = true
+                                            }) {
+                                                HStack {
+                                                    Image(systemName: "doc.on.doc")
+                                                    Text("Copy PIN")
+                                                }
+                                                .font(.caption)
+                                                .foregroundColor(.blue)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 6)
+                                                .background(Color.blue.opacity(0.1))
+                                                .cornerRadius(8)
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(12)
+                                    }
+                                    
                                     // Status Section
                                     VStack(spacing: 8) {
                                         if let location = locationManager.location {
@@ -283,14 +380,11 @@ struct MainView: View {
                                 await sharingManager.stopSharing()
                             }
                         } else {
-                            sharingTask?.cancel()
-                            sharingTask = Task {
-                                await sharingManager.startSharing(duration: duration * unit.multiplier)
-                                await MainActor.run {
-                                    if !sharingManager.activeShares.isEmpty {
-                                        showingShareDialog = true
-                                    }
-                                }
+                            // Check if using default server and show warning if needed
+                            if isUsingDefaultServer && !hasSeenDefaultServerWarning {
+                                showingDefaultServerWarning = true
+                            } else {
+                                startSharing()
                             }
                         }
                     } label: {
@@ -307,7 +401,7 @@ struct MainView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 20)
-                    .disabled(locationManager.authorizationStatus != .authorizedAlways)
+                    .disabled(locationManager.authorizationStatus != .authorizedAlways || !canStartSharing)
                 }
             }
             
@@ -374,8 +468,24 @@ struct MainView: View {
                 Text("") // Empty message if no active share
             }
         }
+        .alert("PIN Copied", isPresented: $showingCopiedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Group PIN has been copied to clipboard")
+        }
         .navigationDestination(isPresented: $showingSettings) {
             SettingsView()
+        }
+        .alert("Using Default Server", isPresented: $showingDefaultServerWarning) {
+            Button("Continue") {
+                hasSeenDefaultServerWarning = true
+                startSharing()
+            }
+            Button("Configure Server", role: .cancel) {
+                showingSettings = true
+            }
+        } message: {
+            Text("You're about to share your location using the default server (hauk.live). You can configure a different server in Settings if you prefer.")
         }
     }
 } 

@@ -24,6 +24,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		015DA7522E8030B500717D30 /* 21-Sep-2025-1503.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "21-Sep-2025-1503.gpx"; path = "../../Library/Mobile Documents/com~apple~CloudDocs/21-Sep-2025-1503.gpx"; sourceTree = "<group>"; };
+		015DA7532E80320D00717D30 /* 21-Sep-2025-1503-xcode.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "21-Sep-2025-1503-xcode.gpx"; path = "../../Downloads/21-Sep-2025-1503-xcode.gpx"; sourceTree = "<group>"; };
+		015DA7542E80322100717D30 /* Teutoburgerwoud_Motor_Trip.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Teutoburgerwoud_Motor_Trip.gpx; path = ../../Downloads/Teutoburgerwoud_Motor_Trip.gpx; sourceTree = "<group>"; };
+		015DA7552E80351200717D30 /* vienna-graz-by-car.gpx */ = {isa = PBXFileReference; lastKnownFileType = text; name = "vienna-graz-by-car.gpx"; path = "../gips/routes/vienna-graz-by-car.gpx"; sourceTree = "<group>"; };
+		015DA7562E80375500717D30 /* 21-Sep-2025-1503-xcode-100kph.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "21-Sep-2025-1503-xcode-100kph.gpx"; path = "../../Downloads/21-Sep-2025-1503-xcode-100kph.gpx"; sourceTree = "<group>"; };
 		016F2B492CDE9FC5004205E7 /* Hauk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hauk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		016F2B592CDE9FC7004205E7 /* HaukTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HaukUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +93,11 @@
 		016F2B402CDE9FC4004205E7 = {
 			isa = PBXGroup;
 			children = (
+				015DA7562E80375500717D30 /* 21-Sep-2025-1503-xcode-100kph.gpx */,
+				015DA7552E80351200717D30 /* vienna-graz-by-car.gpx */,
+				015DA7542E80322100717D30 /* Teutoburgerwoud_Motor_Trip.gpx */,
+				015DA7532E80320D00717D30 /* 21-Sep-2025-1503-xcode.gpx */,
+				015DA7522E8030B500717D30 /* 21-Sep-2025-1503.gpx */,
 				016F2B4B2CDE9FC5004205E7 /* Hauk */,
 				016F2B5C2CDE9FC7004205E7 /* HaukTests */,
 				016F2B662CDE9FC7004205E7 /* HaukUITests */,
@@ -407,7 +417,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Hauk/Preview Content\"";
 				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_PREVIEWS = YES;
@@ -424,7 +434,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -441,7 +451,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Hauk/Preview Content\"";
 				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_PREVIEWS = YES;
@@ -458,7 +468,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

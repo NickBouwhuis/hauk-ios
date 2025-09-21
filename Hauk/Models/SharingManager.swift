@@ -31,8 +31,11 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         var viewerId: String?
         let expiryDate: Date
         var locations: [CLLocation]
+        let shareMode: ShareMode
+        var groupPin: String?
+        var nickname: String?
         
-        init(id: String, baseUrl: URL, expiryDate: Date) {
+        init(id: String, baseUrl: URL, expiryDate: Date, shareMode: ShareMode = .createAlone) {
             self.id = id
             self.baseUrl = baseUrl
             self.shareUrl = baseUrl
@@ -40,6 +43,9 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             self.viewerId = nil
             self.expiryDate = expiryDate
             self.locations = []
+            self.shareMode = shareMode
+            self.groupPin = nil
+            self.nickname = nil
         }
         
         init(id: String, 
@@ -48,7 +54,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
              sessionId: String?, 
              viewerId: String?, 
              expiryDate: Date, 
-             locations: [CLLocation]) {
+             locations: [CLLocation],
+             shareMode: ShareMode = .createAlone,
+             groupPin: String? = nil,
+             nickname: String? = nil) {
             self.id = id
             self.baseUrl = baseUrl
             self.shareUrl = shareUrl
@@ -56,18 +65,17 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             self.viewerId = viewerId
             self.expiryDate = expiryDate
             self.locations = locations
+            self.shareMode = shareMode
+            self.groupPin = groupPin
+            self.nickname = nickname
         }
     }
     
-    func startSharing(duration: TimeInterval) async {
-        guard let serverUrl = UserDefaults.standard.string(forKey: "serverUrl"), !serverUrl.isEmpty else {
-            await MainActor.run {
-                error = SharingError.noServerConfigured
-                isSharing = false
-                activeShares.removeAll()
-            }
-            return
-        }
+    func startSharing(duration: TimeInterval, shareMode: ShareMode = .createAlone, nickname: String? = nil, groupPin: String? = nil) async {
+        // Use default server if no server is configured
+        let configuredServerUrl = UserDefaults.standard.string(forKey: "serverUrl") ?? ""
+        let serverUrl = configuredServerUrl.isEmpty ? "https://hauk.live" : configuredServerUrl
+        print("🔍 Starting sharing with server: \(serverUrl)")
         
         let shareId = UUID().uuidString
         let expiryDate = Date().addingTimeInterval(duration)
@@ -84,7 +92,8 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         let share = Share(
             id: shareId,
             baseUrl: baseUrl,
-            expiryDate: expiryDate
+            expiryDate: expiryDate,
+            shareMode: shareMode
         )
         
         await MainActor.run {
@@ -92,7 +101,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         }
         
         do {
-            try await initializeShare(share)
+            try await initializeShare(share, nickname: nickname, groupPin: groupPin)
             
             await MainActor.run {
                 isSharing = true
@@ -107,6 +116,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             }
         } catch {
             await MainActor.run {
+                print("❌ Sharing error: \(error)")
+                if let sharingError = error as? SharingError {
+                    print("❌ SharingError type: \(sharingError)")
+                }
                 self.error = error
                 self.activeShares.removeAll()
                 locationManager?.stopUpdating()
@@ -115,15 +128,17 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         }
     }
     
-    private func initializeShare(_ share: Share) async throws {
-        var request = URLRequest(url: share.baseUrl.appendingPathComponent("api/create.php"))
+    private func initializeShare(_ share: Share, nickname: String? = nil, groupPin: String? = nil) async throws {
+        let requestUrl = share.baseUrl.appendingPathComponent("api/create.php")
+        print("🌐 Making request to: \(requestUrl)")
+        
+        var request = URLRequest(url: requestUrl)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
         // Get settings
         let preferredLinkId = UserDefaults.standard.string(forKey: "preferredLinkId") ?? ""
-        // Boolean, but the API wants it as an int.  Default to the more private false
-        let isAdoptable = UserDefaults.standard.object(forKey: "isAdoptable") as? Int ?? 0
+        let isAdoptable = UserDefaults.standard.bool(forKey: "isAdoptable") ? 1 : 0
 //        let isPasswordProtected = UserDefaults.standard.bool(forKey: "isPasswordProtected")
 //        let sharePassword = UserDefaults.standard.string(forKey: "sharePassword") ?? ""
         let username = UserDefaults.standard.string(forKey: "username") ?? ""
@@ -132,16 +147,27 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         // Use default value of 1 if not set
         let interval = UserDefaults.standard.object(forKey: "updateInterval") as? Int ?? 1
         
-        let params = [
+        var params = [
             ("dur", "\(Int(share.expiryDate.timeIntervalSinceNow))"),
-            ("mod", "0"),
+            ("mod", "\(share.shareMode.rawValue)"),
             ("lid", preferredLinkId),
-            ("e2e", "0"),
+            ("e2e", "0"), // Group shares don't support E2E encryption
             ("usr", username),
             ("pwd", password),
             ("ado", "\(isAdoptable)"),
             ("int", "\(interval)")
         ]
+        
+        // Add group-specific parameters
+        if share.shareMode.isGroupType {
+            if let nickname = nickname {
+                params.append(("nic", nickname))
+            }
+            
+            if share.shareMode == .joinGroup, let groupPin = groupPin {
+                params.append(("pin", groupPin))
+            }
+        }
         
         let formData = params.map { key, value in 
             "\(key)=\(value)"
@@ -151,9 +177,16 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
+        print("📡 Response received: \(response)")
+        if let httpResponse = response as? HTTPURLResponse {
+            print("📡 Status code: \(httpResponse.statusCode)")
+        }
+        
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
-            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
+            let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown server error"
+            print("❌ Server error: \(errorMessage)")
+            throw SharingError.serverError(errorMessage)
         }
         
         guard let responseStr = String(data: data, encoding: .utf8) else {
@@ -173,7 +206,19 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         }
         
         let sessionId = String(parts[1])
-        let viewerId = String(parts[3])
+        
+        // For group shares, the response format is different
+        var viewerId: String
+        var groupPin: String? = nil
+        
+        if share.shareMode == .createGroup && parts.count >= 5 {
+            // Group share response: ["OK", sessionID, viewURL, groupPIN, shareID]
+            groupPin = String(parts[3]) // Group PIN is at index 3
+            viewerId = String(parts[4]) // Share ID is at index 4
+        } else {
+            // Solo share response: ["OK", sessionID, viewURL, shareID]
+            viewerId = String(parts[3]) // Share ID is at index 3
+        }
         
         // Create the updated share as a local constant
         let finalShare = Share(
@@ -183,7 +228,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             sessionId: sessionId,
             viewerId: viewerId,
             expiryDate: share.expiryDate,
-            locations: share.locations
+            locations: share.locations,
+            shareMode: share.shareMode,
+            groupPin: groupPin,
+            nickname: nickname
         )
         
         await MainActor.run {
@@ -295,11 +343,60 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         sessionId = nil
     }
     
+    func adoptShare(shareId: String, nickname: String) async throws {
+        // Use default server if no server is configured
+        let configuredServerUrl = UserDefaults.standard.string(forKey: "serverUrl") ?? ""
+        let serverUrl = configuredServerUrl.isEmpty ? "https://hauk.live" : configuredServerUrl
+        
+        guard let baseUrl = URL(string: serverUrl) else {
+            throw SharingError.invalidServerUrl
+        }
+        
+        guard let currentShare = activeShares.first else {
+            throw SharingError.noActiveShare
+        }
+        
+        guard let groupPin = currentShare.groupPin else {
+            throw SharingError.notAGroupShare
+        }
+        
+        var request = URLRequest(url: baseUrl.appendingPathComponent("api/adopt.php"))
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        
+        let params = [
+            ("sid", currentShare.sessionId ?? ""),
+            ("nic", nickname),
+            ("aid", shareId),
+            ("pin", groupPin)
+        ]
+        
+        let formData = params.map { key, value in
+            "\(key)=\(value)"
+        }.joined(separator: "&")
+        
+        request.httpBody = formData.data(using: .utf8)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
+        }
+        
+        guard let responseStr = String(data: data, encoding: .utf8),
+              responseStr.trimmingCharacters(in: .whitespacesAndNewlines) == "OK" else {
+            throw SharingError.serverError("Adoption failed: \(String(data: data, encoding: .utf8) ?? "Unknown error")")
+        }
+    }
+    
     enum SharingError: LocalizedError {
         case noServerConfigured
         case invalidServerUrl
         case serverError(String)
         case cancelled
+        case noActiveShare
+        case notAGroupShare
         
         var errorDescription: String? {
             switch self {
@@ -311,6 +408,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                 return "Server error: \(response)"
             case .cancelled:
                 return "Operation cancelled. This is normal during rapid updates."
+            case .noActiveShare:
+                return "No active share to adopt into."
+            case .notAGroupShare:
+                return "Current share is not a group share."
             }
         }
     }
