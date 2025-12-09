@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import UserNotifications
+import ActivityKit
 
 @MainActor
 final class SharingManager: ObservableObject, @unchecked Sendable {
@@ -17,7 +18,11 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     private let locationManager: LocationManager?
     private var uploadTask: Task<Void, Never>?
     private var sessionId: String?
+
     private let queue = DispatchQueue(label: "net.bouwhuis.nick.Hauk.sharing")
+    
+    private var expiryTimer: Timer?
+    private var activity: Activity<LocationSharingAttributes>?
     
     init(locationManager: LocationManager? = nil) {
         self.locationManager = locationManager
@@ -113,6 +118,18 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                         await self.uploadLocation(location)
                     }
                 }
+                
+                // Start local expiry timer
+                self.startExpiryTimer(duration: duration)
+            }
+
+            // Start Live Activity after MainActor updates are complete
+            // This ensures the Live Activity is fully initialized before returning
+            if #available(iOS 16.1, *) {
+                // Access shareUrl from the updated activeShares
+                if let currentShare = await MainActor.run(body: { self.activeShares.first }) {
+                    await self.startActivity(expiryDate: expiryDate, shareUrl: currentShare.shareUrl.absoluteString)
+                }
             }
         } catch {
             await MainActor.run {
@@ -123,6 +140,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                 self.error = error
                 self.activeShares.removeAll()
                 locationManager?.stopUpdating()
+                stopExpiryTimer()
                 isSharing = false
             }
         }
@@ -275,15 +293,24 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         // Check for specific error responses
         if let responseStr = String(data: data, encoding: .utf8) {
-            if responseStr.contains("Session expired!") {
-                await stopSharing()
-                return
-            }
+            let trimmedResponse = responseStr.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            // Check for validation errors first
             if responseStr.contains("Missing data!") {
                 throw SharingError.serverError("Missing data in request")
             }
-            if !responseStr.hasPrefix("OK") {
-                throw SharingError.serverError("Unexpected response: \(responseStr)")
+
+            // If response doesn't start with "OK", it's likely a session expired message
+            // The server returns localized messages like:
+            // - "Session expired!" (English)
+            // - "Sessie verlopen!" (Dutch)
+            // - "Sitzung abgelaufen!" (German)
+            // - etc. in many other languages
+            // We handle all of them gracefully by stopping the session
+            if !trimmedResponse.hasPrefix("OK") {
+                // Session has expired, stop sharing gracefully
+                await stopSharing()
+                return
             }
         }
     }
@@ -293,6 +320,10 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         do {
             try await uploadLocationToServer(location, for: share)
+            
+            if #available(iOS 16.1, *) {
+                 await updateActivity(with: location)
+            }
         } catch {
             if error is CancellationError {
                 return
@@ -327,6 +358,7 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         
         await MainActor.run {
             locationManager?.stopUpdating()
+            stopExpiryTimer()
             isSharing = false
             activeShares.removeAll()
         }
@@ -438,6 +470,12 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                     }
                 }
             }
+            
+            if #available(iOS 16.1, *) {
+                Task {
+                    await endActivity(expired: expired)
+                }
+            }
         }
         
         // If app is in background, show system notification
@@ -458,5 +496,93 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             
             try? await notificationCenter.add(request)
         }
+    }
+    
+    private func startExpiryTimer(duration: TimeInterval) {
+        stopExpiryTimer()
+        
+        // Use a non-repeating timer on the main run loop
+        expiryTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                if self.isSharing {
+                    await self.stopSharing()
+                    // Explicitly handle session end as expired since local timer triggered it
+                    // stopSharing() calls handleSessionEnd(expired: false) by default, 
+                    // so we might need to update the message/notification if needed, 
+                    // but stopSharing() logic handles the cleanup.
+                    // The issue is distinguishing between user stop and expiration.
+                    // stopSharing() assumes user stop. 
+                    // Let's refine stopSharing or handle it here.
+                    // Actually, if we call stopSharing(), it calls stopShare(share) which hits the server.
+                    // The server might eventually return "Session expired" on next update, but we want to be proactive.
+                    
+                    // Let's override the message for expiration
+                    self.sessionEndMessage = "Location sharing session expired"
+                }
+            }
+        }
+    }
+    
+    private func stopExpiryTimer() {
+        expiryTimer?.invalidate()
+        expiryTimer = nil
+    }
+    
+    @available(iOS 16.1, *)
+    private func startActivity(expiryDate: Date, shareUrl: String) async {
+        let attributes = LocationSharingAttributes(shareUrl: shareUrl, startDate: Date())
+        let contentState = LocationSharingAttributes.ContentState(expiryDate: expiryDate, lastLocation: nil)
+        
+        do {
+            let activity = try Activity<LocationSharingAttributes>.request(
+                attributes: attributes,
+                content: .init(state: contentState, staleDate: nil)
+            )
+            self.activity = activity
+            print("🚀 Started Live Activity: \(activity.id)")
+        } catch {
+            print("❌ Error starting Live Activity: \(error.localizedDescription)")
+        }
+    }
+    
+    @available(iOS 16.1, *)
+    private func updateActivity(with location: CLLocation) async {
+        guard let activity = activity else { return }
+        
+        // Reverse geocoding could be done here if we want address, but for now let's show coordinates or speed
+        // Or keep it simple: "Moving at X km/h" or just update freshness.
+        
+        let speed = location.speed > 0 ? Int(location.speed * 3.6) : 0
+        let locationStr = speed > 0 ? "\(speed) km/h" : "Stationary"
+        
+        // We need to keep the original expiry date from the activity
+        // Accessing content.state in update is tricky if we don't store it. 
+        // But we have ContentState definition.
+        
+        let currentContentState = activity.content.state
+        let contentState = LocationSharingAttributes.ContentState(
+            expiryDate: currentContentState.expiryDate,
+            lastLocation: locationStr
+        )
+        
+        await activity.update(.init(state: contentState, staleDate: nil))
+    }
+    
+    @available(iOS 16.1, *)
+    private func endActivity(expired: Bool) async {
+        // Iterate through all active activities and end them
+        for activity in Activity<LocationSharingAttributes>.activities {
+            let finalContentState = activity.content.state
+            let dismissalPolicy: ActivityUIDismissalPolicy = .immediate
+            
+            await activity.end(
+                .init(state: finalContentState, staleDate: nil),
+                dismissalPolicy: dismissalPolicy
+            )
+            print("🛑 Ended Live Activity: \(activity.id)")
+        }
+        
+        self.activity = nil
     }
 } 

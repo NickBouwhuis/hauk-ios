@@ -41,7 +41,7 @@ struct ShareModeSelectionView: View {
                         TextField("Group PIN", text: $groupPin)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.numberPad)
-                            .onChange(of: groupPin) { newValue in
+                            .onChange(of: groupPin) { _, newValue in
                                 // Limit to 6 digits
                                 if newValue.count > 6 {
                                     groupPin = String(newValue.prefix(6))

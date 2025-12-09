@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		015C98922EE376ED00418A09 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 015C98912EE376ED00418A09 /* WidgetKit.framework */; };
+		015C98942EE376ED00418A09 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 015C98932EE376ED00418A09 /* SwiftUI.framework */; };
+		015C98A52EE376ED00418A09 /* HaukWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 015C988F2EE376ED00418A09 /* HaukWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		015C98A32EE376ED00418A09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 016F2B412CDE9FC5004205E7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 015C988E2EE376ED00418A09;
+			remoteInfo = HaukWidgetExtension;
+		};
 		016F2B5A2CDE9FC7004205E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 016F2B412CDE9FC5004205E7 /* Project object */;
@@ -23,7 +36,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		015C98A62EE376ED00418A09 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				015C98A52EE376ED00418A09 /* HaukWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		015C988F2EE376ED00418A09 /* HaukWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HaukWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		015C98912EE376ED00418A09 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		015C98932EE376ED00418A09 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		015DA7522E8030B500717D30 /* 21-Sep-2025-1503.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "21-Sep-2025-1503.gpx"; path = "../../Library/Mobile Documents/com~apple~CloudDocs/21-Sep-2025-1503.gpx"; sourceTree = "<group>"; };
 		015DA7532E80320D00717D30 /* 21-Sep-2025-1503-xcode.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "21-Sep-2025-1503-xcode.gpx"; path = "../../Downloads/21-Sep-2025-1503-xcode.gpx"; sourceTree = "<group>"; };
 		015DA7542E80322100717D30 /* Teutoburgerwoud_Motor_Trip.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Teutoburgerwoud_Motor_Trip.gpx; path = ../../Downloads/Teutoburgerwoud_Motor_Trip.gpx; sourceTree = "<group>"; };
@@ -35,6 +65,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		015C98AA2EE376ED00418A09 /* Exceptions for "HaukWidget" folder in "HaukWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 015C988E2EE376ED00418A09 /* HaukWidgetExtension */;
+		};
+		015C98AC2EE3771100418A09 /* Exceptions for "Hauk" folder in "HaukWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/LocationSharingAttributes.swift,
+				Views/HaukActivity.swift,
+			);
+			target = 015C988E2EE376ED00418A09 /* HaukWidgetExtension */;
+		};
 		01D20E302CDF79640008FC2A /* Exceptions for "Hauk" folder in "Hauk" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -45,10 +90,19 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		015C98952EE376ED00418A09 /* HaukWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				015C98AA2EE376ED00418A09 /* Exceptions for "HaukWidget" folder in "HaukWidgetExtension" target */,
+			);
+			path = HaukWidget;
+			sourceTree = "<group>";
+		};
 		016F2B4B2CDE9FC5004205E7 /* Hauk */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				01D20E302CDF79640008FC2A /* Exceptions for "Hauk" folder in "Hauk" target */,
+				015C98AC2EE3771100418A09 /* Exceptions for "Hauk" folder in "HaukWidgetExtension" target */,
 			);
 			path = Hauk;
 			sourceTree = "<group>";
@@ -66,6 +120,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		015C988C2EE376ED00418A09 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				015C98942EE376ED00418A09 /* SwiftUI.framework in Frameworks */,
+				015C98922EE376ED00418A09 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		016F2B462CDE9FC5004205E7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -90,6 +153,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		015C98902EE376ED00418A09 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				015C98912EE376ED00418A09 /* WidgetKit.framework */,
+				015C98932EE376ED00418A09 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		016F2B402CDE9FC4004205E7 = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +173,8 @@
 				016F2B4B2CDE9FC5004205E7 /* Hauk */,
 				016F2B5C2CDE9FC7004205E7 /* HaukTests */,
 				016F2B662CDE9FC7004205E7 /* HaukUITests */,
+				015C98952EE376ED00418A09 /* HaukWidget */,
+				015C98902EE376ED00418A09 /* Frameworks */,
 				016F2B4A2CDE9FC5004205E7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -111,6 +185,7 @@
 				016F2B492CDE9FC5004205E7 /* Hauk.app */,
 				016F2B592CDE9FC7004205E7 /* HaukTests.xctest */,
 				016F2B632CDE9FC7004205E7 /* HaukUITests.xctest */,
+				015C988F2EE376ED00418A09 /* HaukWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +193,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		015C988E2EE376ED00418A09 /* HaukWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 015C98A92EE376ED00418A09 /* Build configuration list for PBXNativeTarget "HaukWidgetExtension" */;
+			buildPhases = (
+				015C988B2EE376ED00418A09 /* Sources */,
+				015C988C2EE376ED00418A09 /* Frameworks */,
+				015C988D2EE376ED00418A09 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				015C98952EE376ED00418A09 /* HaukWidget */,
+			);
+			name = HaukWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = HaukWidgetExtension;
+			productReference = 015C988F2EE376ED00418A09 /* HaukWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		016F2B482CDE9FC5004205E7 /* Hauk */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 016F2B6D2CDE9FC7004205E7 /* Build configuration list for PBXNativeTarget "Hauk" */;
@@ -125,10 +222,12 @@
 				016F2B452CDE9FC5004205E7 /* Sources */,
 				016F2B462CDE9FC5004205E7 /* Frameworks */,
 				016F2B472CDE9FC5004205E7 /* Resources */,
+				015C98A62EE376ED00418A09 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				015C98A42EE376ED00418A09 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				016F2B4B2CDE9FC5004205E7 /* Hauk */,
@@ -193,9 +292,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1610;
+				LastSwiftUpdateCheck = 2610;
+				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					015C988E2EE376ED00418A09 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
 					016F2B482CDE9FC5004205E7 = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -226,11 +328,19 @@
 				016F2B482CDE9FC5004205E7 /* Hauk */,
 				016F2B582CDE9FC7004205E7 /* HaukTests */,
 				016F2B622CDE9FC7004205E7 /* HaukUITests */,
+				015C988E2EE376ED00418A09 /* HaukWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		015C988D2EE376ED00418A09 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		016F2B472CDE9FC5004205E7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -255,6 +365,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		015C988B2EE376ED00418A09 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		016F2B452CDE9FC5004205E7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,6 +396,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		015C98A42EE376ED00418A09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 015C988E2EE376ED00418A09 /* HaukWidgetExtension */;
+			targetProxy = 015C98A32EE376ED00418A09 /* PBXContainerItemProxy */;
+		};
 		016F2B5B2CDE9FC7004205E7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 016F2B482CDE9FC5004205E7 /* Hauk */;
@@ -292,6 +414,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		015C98A72EE376ED00418A09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 15;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HaukWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HaukWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.6.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.HaukWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		015C98A82EE376ED00418A09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 15;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HaukWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HaukWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.6.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk.HaukWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		016F2B6B2CDE9FC7004205E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -327,6 +509,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -350,6 +533,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -390,6 +574,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -406,6 +591,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -417,9 +603,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Hauk/Preview Content\"";
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Hauk/Info.plist;
@@ -429,12 +614,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -451,9 +636,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Hauk/Preview Content\"";
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Hauk/Info.plist;
@@ -463,12 +647,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -485,7 +669,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
@@ -504,7 +687,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
@@ -522,7 +704,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.HaukUITests;
@@ -539,7 +720,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8SF744P2Y5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.HaukUITests;
@@ -554,6 +734,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		015C98A92EE376ED00418A09 /* Build configuration list for PBXNativeTarget "HaukWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				015C98A72EE376ED00418A09 /* Debug */,
+				015C98A82EE376ED00418A09 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		016F2B442CDE9FC5004205E7 /* Build configuration list for PBXProject "Hauk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

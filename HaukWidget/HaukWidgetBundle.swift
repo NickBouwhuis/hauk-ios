@@ -13,6 +13,6 @@ struct HaukWidgetBundle: WidgetBundle {
     var body: some Widget {
         HaukWidget()
         HaukWidgetControl()
-        HaukWidgetLiveActivity()
+        HaukActivity()
     }
 }

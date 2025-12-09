@@ -31,7 +31,7 @@ struct AdoptShareView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
-                            .onChange(of: shareId) { newValue in
+                            .onChange(of: shareId) { _, newValue in
                                 // Extract share ID from URL if pasted
                                 if let extractedId = extractShareId(from: newValue) {
                                     shareId = extractedId
