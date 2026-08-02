@@ -619,7 +619,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -652,7 +652,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bouwhuis.nick.Hauk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

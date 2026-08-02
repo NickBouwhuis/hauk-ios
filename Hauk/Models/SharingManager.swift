@@ -335,44 +335,46 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
         }
     }
     
-    private func stopShare(_ share: Share) async throws {
-        guard let sessionId = share.sessionId else { return }
-        
-        var request = URLRequest(url: share.baseUrl.appendingPathComponent("api/stop.php"))
-        request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
-        let formData = "sid=\(sessionId)"
-        request.httpBody = formData.data(using: .utf8)
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw SharingError.serverError(String(data: data, encoding: .utf8) ?? "Unknown server error")
-        }
+    // MARK: - Stopping
+
+    /// Retries any stop the server hasn't confirmed yet. Called on launch and
+    /// on every foreground. See `StopRequestService` for the guarantees.
+    func flushPendingStops() async {
+        await StopRequestService.shared.flush()
     }
-    
+
     func stopSharing() async {
         let shareToStop = await MainActor.run { activeShares.first }
-        
+
         await MainActor.run {
             locationManager?.stopUpdating()
             stopExpiryTimer()
             isSharing = false
             activeShares.removeAll()
         }
-        
-        if let share = shareToStop {
-            do {
-                try await stopShare(share)
-                await handleSessionEnd(expired: false)
-            } catch {
-                print("Error stopping share: \(error.localizedDescription)")
+
+        // Tear down the Live Activity before touching the network. The stop
+        // request can fail, time out, or be interrupted by the app being
+        // killed, and none of that should leave a Live Activity counting
+        // down on the lock screen after the user stopped sharing.
+        if #available(iOS 16.1, *) {
+            await endActivity(expired: false)
+        }
+
+        sessionId = nil
+
+        // Runs regardless of whether the server call succeeds: sharing has
+        // already been torn down locally, so the user gets told either way.
+        await handleSessionEnd(expired: false)
+
+        // Deliberately unstructured: the caller's task is cancelled when the
+        // user starts another share, and that must not abandon the stop.
+        if let share = shareToStop, let shareSessionId = share.sessionId {
+            let baseUrl = share.baseUrl
+            Task {
+                await StopRequestService.shared.stop(sessionId: shareSessionId, baseUrl: baseUrl)
             }
         }
-        
-        sessionId = nil
     }
     
     func adoptShare(shareId: String, nickname: String) async throws {
@@ -471,13 +473,12 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
                 }
             }
             
-            if #available(iOS 16.1, *) {
-                Task {
-                    await endActivity(expired: expired)
-                }
-            }
         }
-        
+
+        if #available(iOS 16.1, *) {
+            await endActivity(expired: expired)
+        }
+
         // If app is in background, show system notification
         let notificationCenter = UNUserNotificationCenter.current()
         let settings = await notificationCenter.notificationSettings()
@@ -531,13 +532,17 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
     
     @available(iOS 16.1, *)
     private func startActivity(expiryDate: Date, shareUrl: String) async {
+        // Clear out anything left over from a previous session before
+        // requesting a new one, so we never stack up orphaned activities.
+        await endOrphanedActivities()
+
         let attributes = LocationSharingAttributes(shareUrl: shareUrl, startDate: Date())
         let contentState = LocationSharingAttributes.ContentState(expiryDate: expiryDate, lastLocation: nil)
-        
+
         do {
             let activity = try Activity<LocationSharingAttributes>.request(
                 attributes: attributes,
-                content: .init(state: contentState, staleDate: nil)
+                content: .init(state: contentState, staleDate: expiryDate)
             )
             self.activity = activity
             print("🚀 Started Live Activity: \(activity.id)")
@@ -566,23 +571,50 @@ final class SharingManager: ObservableObject, @unchecked Sendable {
             lastLocation: locationStr
         )
         
-        await activity.update(.init(state: contentState, staleDate: nil))
+        await activity.update(.init(state: contentState, staleDate: currentContentState.expiryDate))
     }
-    
+
     @available(iOS 16.1, *)
     private func endActivity(expired: Bool) async {
-        // Iterate through all active activities and end them
+        await endOrphanedActivities()
+    }
+
+    /// Ends every Live Activity of ours that is still registered with the
+    /// system, whether or not this instance holds a handle to it. The final
+    /// content state expires immediately so the countdown cannot keep
+    /// ticking during the dismissal.
+    @available(iOS 16.1, *)
+    private func endOrphanedActivities() async {
+        let now = Date()
+
         for activity in Activity<LocationSharingAttributes>.activities {
-            let finalContentState = activity.content.state
-            let dismissalPolicy: ActivityUIDismissalPolicy = .immediate
-            
+            let finalContentState = LocationSharingAttributes.ContentState(
+                expiryDate: now,
+                lastLocation: activity.content.state.lastLocation
+            )
+
             await activity.end(
-                .init(state: finalContentState, staleDate: nil),
-                dismissalPolicy: dismissalPolicy
+                .init(state: finalContentState, staleDate: now),
+                dismissalPolicy: .immediate
             )
             print("🛑 Ended Live Activity: \(activity.id)")
         }
-        
+
         self.activity = nil
+    }
+
+    /// Called when the app becomes active. Sharing state is not persisted
+    /// across launches, so any Live Activity still alive while we are not
+    /// sharing is a leftover from a session that ended without being able to
+    /// clean up (failed stop request, crash, force quit) and must be removed.
+    @available(iOS 16.1, *)
+    func reconcileLiveActivities() async {
+        guard !isSharing else { return }
+
+        let orphans = Activity<LocationSharingAttributes>.activities
+        guard !orphans.isEmpty else { return }
+
+        print("🧹 Cleaning up \(orphans.count) orphaned Live Activity/Activities")
+        await endOrphanedActivities()
     }
 } 
